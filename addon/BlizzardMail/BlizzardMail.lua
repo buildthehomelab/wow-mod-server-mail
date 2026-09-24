@@ -2,7 +2,7 @@
 --
 -- A GM window for mailing items and gold to players from "Blizzard Services". The addon doesn't
 -- send the mail itself (a client can only send mail as the character that's logged in); it drives
--- the wow-mod-server-mail server commands over AzerothCore's addon command channel:
+-- the mod-server-mail server commands over AzerothCore's addon command channel:
 --
 --   client -> server   SendAddonMessage("AzerothCore", "i" .. echo .. command, "WHISPER", <self>)
 --   server -> client   "a" .. echo            command received
@@ -384,7 +384,7 @@ local function DoSend()
                 output = "The server refused the mail."
             end
             if index == 1 then
-                output = output .. " (Blizzard Mail needs a GM account and the wow-mod-server-mail server module.)"
+                output = output .. " (Blizzard Mail needs a GM account and the mod-server-mail server module.)"
             end
             SetStatus(output, true)
             Print("|cffff5050" .. output .. "|r")

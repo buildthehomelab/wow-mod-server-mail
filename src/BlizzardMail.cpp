@@ -1,5 +1,5 @@
 /*
- * wow-mod-server-mail
+ * mod-server-mail
  *
  * `.blizzmail send` mails a player items and/or gold that show up in their mailbox as coming
  * from "Blizzard Services" rather than from the GM's character. The BlizzardMail client addon is
@@ -426,14 +426,14 @@ public:
     {
         if (!config.enabled)
         {
-            handler->SendErrorMessage("wow-mod-server-mail is disabled (BlizzardMail.Enable = 0).");
+            handler->SendErrorMessage("mod-server-mail is disabled (BlizzardMail.Enable = 0).");
             return false;
         }
 
         // Without the creature row the client would show the sender as "Unknown".
         if (!sObjectMgr->GetCreatureTemplate(config.senderEntry))
         {
-            handler->SendErrorMessage("Sender creature {} doesn't exist. Apply the wow-mod-server-mail SQL "
+            handler->SendErrorMessage("Sender creature {} doesn't exist. Apply the mod-server-mail SQL "
                 "or fix BlizzardMail.SenderEntry.", config.senderEntry);
             return false;
         }
@@ -538,7 +538,7 @@ public:
         handler->PSendSysMessage("Blizzard mail sent to {} ({}): {}", handler->playerLink(target.GetName()),
             receiver ? "online" : "offline", contents);
 
-        LOG_INFO("module", "wow-mod-server-mail: {} mailed {} (guid {}) \"{}\": {}",
+        LOG_INFO("module", "mod-server-mail: {} mailed {} (guid {}) \"{}\": {}",
             handler->GetSession() ? handler->GetSession()->GetPlayerName() : "Console",
             target.GetName(), receiverLow, subject, contents);
 
@@ -560,7 +560,7 @@ public:
     void OnStartup() override
     {
         if (config.enabled && !sObjectMgr->GetCreatureTemplate(config.senderEntry))
-            LOG_ERROR("module", "wow-mod-server-mail: sender creature {} (BlizzardMail.SenderEntry) is missing from "
+            LOG_ERROR("module", "mod-server-mail: sender creature {} (BlizzardMail.SenderEntry) is missing from "
                 "creature_template; .blizzmail will refuse to send until the module SQL is applied.", config.senderEntry);
     }
 };

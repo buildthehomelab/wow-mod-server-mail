@@ -8,7 +8,7 @@ It comes in two parts:
 
 - **The BlizzardMail addon** (`addon/BlizzardMail`): a window for GMs. Type a name, drag in items
   or pick a rare mount or pet from the menu, write a letter, press Send.
-- **The wow-mod-server-mail server module** (everything else here): does the actual sending. A WoW
+- **The mod-server-mail server module** (everything else here): does the actual sending. A WoW
   addon can only send mail as the character you're logged in as, and the name players see on a
   mail comes from the server, so the "Blizzard Services" part has to happen server-side.
 
@@ -86,21 +86,22 @@ Every send is logged to the `module` logger with who sent what to whom.
 
 ### Server
 
-1. Clone it into your AzerothCore `modules/` directory:
+1. Clone it into your AzerothCore `modules/` directory as `mod-server-mail` (without the
+   repo's `wow-` prefix):
 
    ```bash
    cd modules
-   git clone https://github.com/buildthehomelab/wow-mod-server-mail.git
+   git clone https://github.com/buildthehomelab/wow-mod-server-mail.git mod-server-mail
    ```
 
-   Keep the folder name `wow-mod-server-mail`: AzerothCore finds the module's loader
-   (`Addwow_mod_server_mailScripts`) from it. If you rename the folder, rename that function in
-   `src/wow_mod_server_mail_loader.cpp` to match.
+   The folder name matters: AzerothCore finds the module's loader (`Addmod_server_mailScripts`)
+   from it. A folder with any other name, including the default `wow-mod-server-mail`, builds
+   but never loads unless you rename that function in `src/mod_server_mail_loader.cpp` to match.
 2. Re-run CMake and rebuild the worldserver.
 3. The SQL in `data/sql/db-world/updates/` is applied by the DB updater on the next start. If
    your setup doesn't auto-apply module SQL, run it against `acore_world` by hand. It adds one
    creature template (entry 9500000, "Blizzard Services") that is never spawned.
-4. Copy `conf/mod_blizzard_mail.conf.dist` to `mod_blizzard_mail.conf` next to your other module
+4. Copy `conf/mod_server_mail.conf.dist` to `mod_server_mail.conf` next to your other module
    configs and adjust it if needed.
 
 If the SQL is missing, the worldserver logs an error on startup and `.blizzmail send` refuses to

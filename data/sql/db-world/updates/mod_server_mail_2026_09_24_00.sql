@@ -1,10 +1,10 @@
--- wow-mod-server-mail: the "creature" the mail comes from.
+-- mod-server-mail: the "creature" the mail comes from.
 --
 -- The 3.3.5 client shows the sender of an NPC mail (message type MAIL_CREATURE) by asking the
 -- server for that creature's name, so the name below is exactly what players see in the From
 -- line of their mailbox. It is never spawned anywhere.
 --
--- The entry must match BlizzardMail.SenderEntry in mod_blizzard_mail.conf.
+-- The entry must match BlizzardMail.SenderEntry in mod_server_mail.conf.
 --
 -- To rename the sender, change `name` here (or in the DB) and restart the worldserver. Clients
 -- that already saw the old name keep it in their cache until they delete Cache/WDB.

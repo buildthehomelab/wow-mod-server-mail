@@ -1,7 +1,7 @@
 [worldserver]
 
 ########################################
-# wow-mod-server-mail
+# mod-server-mail
 #
 # Lets GMs mail items and gold to players from "Blizzard Services" instead of from their own
 # character, the way store mounts, pets and TCG loot used to arrive:
