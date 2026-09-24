@@ -2,7 +2,7 @@
  * mod-server-mail
  *
  * `.blizzmail send` mails a player items and/or gold that show up in their mailbox as coming
- * from "Blizzard Services" rather than from the GM's character. The BlizzardMail client addon is
+ * from "Blizzard Services" rather than from the GM's character. The ServerMail client addon is
  * a window for it: it talks to these commands over the core's addon command channel.
  *
  * The trick is the message type. Player mail (MAIL_NORMAL) shows the sending character's name;

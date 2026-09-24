@@ -3,4 +3,4 @@
 ## Notes: GM tool: mail items and gold to players from "Blizzard Services". Needs the mod-server-mail server module and a GM account. /bmail to open.
 ## Version: 1.0
 Presets.lua
-BlizzardMail.lua
+ServerMail.lua

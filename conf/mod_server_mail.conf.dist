@@ -10,7 +10,7 @@
 #   .blizzmail send <player> "subject" "body" [item ...] [gold]
 #
 # Items can be ids (49284), id:count (33447:20) or shift-clicked item links. Gold looks like
-# 100g, 50s or 25c. The BlizzardMail addon (in addon/) gives GMs a window for all of this.
+# 100g, 50s or 25c. The ServerMail addon (in addon/) gives GMs a window for all of this.
 # See the README for more.
 ########################################
 

@@ -6,7 +6,7 @@ pets, store mounts and TCG loot used to show up.
 
 It comes in two parts:
 
-- **The BlizzardMail addon** (`addon/BlizzardMail`): a window for GMs. Type a name, drag in items
+- **The ServerMail addon** (`addon/ServerMail`): a window for GMs. Type a name, drag in items
   or pick a rare mount or pet from the menu, write a letter, press Send.
 - **The mod-server-mail server module** (everything else here): does the actual sending. A WoW
   addon can only send mail as the character you're logged in as, and the name players see on a
@@ -109,8 +109,14 @@ send rather than delivering mail from "Unknown".
 
 ### Addon
 
-Copy `addon/BlizzardMail` into `Interface/AddOns/` in the GM's WoW 3.3.5a client folder, so you
-end up with `Interface/AddOns/BlizzardMail/BlizzardMail.toc`. Players don't need it.
+Copy `addon/ServerMail` into `Interface/AddOns/` in the GM's WoW 3.3.5a client folder, so you
+end up with `Interface/AddOns/ServerMail/ServerMail.toc`. Players don't need it. In game it's
+listed as "Blizzard Mail".
+
+Don't rename the folder to anything starting with "Blizzard". The client treats those folders as
+tampered copies of its own built-in addons and renames them to `.old` at startup. (An older
+version of this addon was called `BlizzardMail` and got hit by exactly that: delete any
+`BlizzardMail.old` folder.)
 
 ## Configuration
 
