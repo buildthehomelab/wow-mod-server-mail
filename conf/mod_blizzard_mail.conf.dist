@@ -1,0 +1,62 @@
+[worldserver]
+
+########################################
+# wow-mod-server-mail
+#
+# Lets GMs mail items and gold to players from "Blizzard Services" instead of from their own
+# character, the way store mounts, pets and TCG loot used to arrive:
+#
+#   .blizzmail send <player> [item ...] [gold]
+#   .blizzmail send <player> "subject" "body" [item ...] [gold]
+#
+# Items can be ids (49284), id:count (33447:20) or shift-clicked item links. Gold looks like
+# 100g, 50s or 25c. The BlizzardMail addon (in addon/) gives GMs a window for all of this.
+# See the README for more.
+########################################
+
+#
+#    BlizzardMail.Enable
+#        Description: Master switch for the .blizzmail command.
+#        Default:     1
+#
+
+BlizzardMail.Enable = 1
+
+#
+#    BlizzardMail.SenderEntry
+#        Description: creature_template entry the mail is sent "from". Players see that creature's
+#                     name as the sender. The module's SQL creates 9500000 = "Blizzard Services";
+#                     only change this if that entry clashes with another module.
+#        Default:     9500000
+#
+
+BlizzardMail.SenderEntry = 9500000
+
+#
+#    BlizzardMail.Stationery
+#        Description: Letter background (Stationery.dbc id).
+#                     61 = GM / Blizzard, 41 = plain, 62 = auction house,
+#                     64 = Love is in the Air, 65 = Winter Veil, 67 = Children's Week
+#        Default:     61
+#
+
+BlizzardMail.Stationery = 61
+
+#
+#    BlizzardMail.ExpireDays
+#        Description: Days before an unopened mail expires. NPC mail is not returned when it
+#                     expires, it is deleted along with its items, so keep this long.
+#        Default:     90
+#
+
+BlizzardMail.ExpireDays = 90
+
+#
+#    BlizzardMail.DefaultSubject
+#    BlizzardMail.DefaultBody
+#        Description: Used when the command doesn't give a subject and body. \n starts a new
+#                     line in the body.
+#
+
+BlizzardMail.DefaultSubject = "A gift for you"
+BlizzardMail.DefaultBody = "Greetings,\n\nPlease find your gift attached. Thank you for playing!\n\nBlizzard Services"
