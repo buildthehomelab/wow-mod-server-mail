@@ -82,6 +82,14 @@ Examples:
 
 Every send is logged to the `module` logger with who sent what to whom.
 
+## Requirements
+
+- An [AzerothCore](https://github.com/azerothcore/azerothcore-wotlk) WotLK (master) server. The
+  module has no other module or core-fork dependencies.
+- A GM account with level 2 or higher to send mail.
+- A WoW 3.3.5a (12340) client with the `ServerMail` addon, for the GMs who use the window.
+  Players don't need it.
+
 ## Installation
 
 ### Server
@@ -156,3 +164,26 @@ The addon sends its commands with `SendAddonMessage("AzerothCore", ...)` whisper
 which the core runs as GM commands and answers the same way (acknowledged / output / OK /
 failed). It sends them one at a time and stops at the first failure: `clear`, then `subject`,
 then the letter in pieces of up to 90 bytes, then `send`.
+
+## Troubleshooting
+
+- **`.blizzmail send` refuses to send and the worldserver logged an error at startup**: the
+  creature SQL (entry 9500000, "Blizzard Services") wasn't applied. Run the file in
+  `data/sql/db-world/updates/` against `acore_world` by hand.
+- **The module builds but the commands don't exist**: the folder isn't named `mod-server-mail`,
+  so AzerothCore never calls the loader. Rename the folder, or rename the function in
+  `src/mod_server_mail_loader.cpp` to match.
+- **The addon says "There is no such command"**: the account isn't GM level 2 or higher, or the
+  module isn't loaded.
+- **The addon is missing or disabled in the client**: a folder starting with "Blizzard" is
+  renamed to `.old` at startup. Keep it named `ServerMail` and delete any `BlizzardMail.old`.
+- **The sender still shows the old name after renaming it**: delete the client's `Cache/WDB`
+  folder.
+
+## Credits
+
+Author: [buildthehomelab](https://github.com/buildthehomelab)
+
+## License
+
+MIT, see [LICENSE](LICENSE).
