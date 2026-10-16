@@ -47,6 +47,9 @@ send the same gift to the next person by changing the name and adding the items 
 The Mounts & Pets list is in `Presets.lua`. Edit it to add your own favorites. The names there
 are only labels; hover an attachment to see the item the server has under that id.
 
+With [DragonUI](https://github.com/buildthehomelab/wow-addon-DragonUI) installed the window takes
+DragonUI's retail look; otherwise it is the stock Blizzard dialog.
+
 ## Commands
 
 The addon uses these. You can also type them in chat or on the worldserver console.
