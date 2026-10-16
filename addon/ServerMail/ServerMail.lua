@@ -488,6 +488,41 @@ end
 ------------------------------------------------------------------------------------------------
 -- Window
 
+-- DragonUI, when it is loaded and carries the helpers borrowed here, reskins the window in its
+-- retail art: the metal frame on rock, a marble letter pane, red buttons. Without it the window
+-- is the stock dialog frame.
+local NineSlice = _G.DragonUI_NineSlice or _G.NineSliceUtils
+
+local function Dragon()
+    local D = _G.DragonUI
+    if D and D._dir and D.atlasinfo and D.SafeSetAtlas and D.SkinRedButton and NineSlice
+            and D.CharacterPanel and D.CharacterPanel.ReskinTab then
+        return D, D.CharacterPanel
+    end
+end
+
+local function Tiled(host, sublevel, file)
+    local texture = host:CreateTexture(nil, "BACKGROUND", nil, sublevel)
+    texture:SetTexture(file, "REPEAT", "REPEAT")
+    texture:SetHorizTile(true)
+    texture:SetVertTile(true)
+    return texture
+end
+
+-- DragonUI's inputs: the stock box with its border darkened to a plain well.
+local function SkinInput(box)
+    local regions = { box:GetRegions() }
+    for i = 1, #regions do
+        local region = regions[i]
+        if region:GetObjectType() == "Texture" then
+            local path = region:GetTexture()
+            if type(path) == "string" and path:lower():find("common%-input%-border") then
+                region:SetTexture(0, 0, 0, 0.55)
+            end
+        end
+    end
+end
+
 local function Label(text, x, y, template)
     local label = frame:CreateFontString(nil, "ARTWORK", template or "GameFontNormal")
     label:SetPoint("TOPLEFT", frame, "TOPLEFT", x, y)
@@ -507,6 +542,9 @@ local function InputBox(name, width, x, y, maxLetters, numeric)
     end
     box:SetScript("OnEscapePressed", box.ClearFocus)
     box:SetScript("OnEnterPressed", box.ClearFocus)
+    if Dragon() then
+        SkinInput(box)
+    end
     return box
 end
 
@@ -534,6 +572,10 @@ local function Button(text, width, ...)
     button:SetHeight(22)
     button:SetPoint(...)
     button:SetText(text)
+    local D = Dragon()
+    if D then
+        D.SkinRedButton(button)
+    end
     return button
 end
 
@@ -558,26 +600,61 @@ local function BuildWindow()
     frame:RegisterForDrag("LeftButton")
     frame:SetScript("OnDragStart", frame.StartMoving)
     frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
-    frame:SetBackdrop({
-        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-        tile = true, tileSize = 32, edgeSize = 32,
-        insets = { left = 11, right = 12, top = 12, bottom = 11 },
-    })
     frame:Hide()
     tinsert(UISpecialFrames, "BlizzardMailFrame") -- Escape closes it
 
-    local header = frame:CreateTexture(nil, "ARTWORK")
-    header:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
-    header:SetWidth(300)
-    header:SetHeight(64)
-    header:SetPoint("TOP", 0, 12)
-    local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    title:SetPoint("TOP", header, "TOP", 0, -14)
-    title:SetText("Blizzard Mail")
-
     local close = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
-    close:SetPoint("TOPRIGHT", -6, -6)
+    local D, CP = Dragon()
+    if D then
+        local rock = Tiled(frame, -8, D._dir .. "UI\\ui-background-rock")
+        rock:SetPoint("TOPLEFT", frame, "TOPLEFT", 2, -21)
+        rock:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2)
+
+        local streaks = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
+        if D:SafeSetAtlas(streaks, "_UI-Frame-TopTileStreaks") then
+            streaks:SetHorizTile(true)
+            streaks:SetHeight(43)
+            streaks:SetPoint("TOPLEFT", frame, "TOPLEFT", 6, -21)
+            streaks:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -2, -21)
+        else
+            streaks:Hide()
+        end
+
+        -- The metal sits on a frame of its own above the content, so nothing draws over it.
+        local chrome = CreateFrame("Frame", nil, frame)
+        chrome:SetAllPoints(frame)
+        chrome:SetFrameLevel(frame:GetFrameLevel() + 30)
+        chrome:EnableMouse(false)
+        NineSlice.ApplyLayout(chrome, NineSlice.GetLayout("NoPortraitFrameTemplate") or NineSlice.GetLayout("PortraitFrameTemplate"))
+
+        local title = chrome:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        title:SetPoint("TOP", frame, "TOP", 0, -5)
+        title:SetText("Blizzard Mail")
+
+        close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 2, 2)
+        if CP.ModernizeCloseButton then
+            CP.ModernizeCloseButton(close, chrome, 1, 0)
+            close:SetFrameLevel(chrome:GetFrameLevel() + 5)
+        end
+    else
+        frame:SetBackdrop({
+            bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+            tile = true, tileSize = 32, edgeSize = 32,
+            insets = { left = 11, right = 12, top = 12, bottom = 11 },
+        })
+
+        local header = frame:CreateTexture(nil, "ARTWORK")
+        header:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
+        header:SetWidth(300)
+        header:SetHeight(64)
+        header:SetPoint("TOP", 0, 12)
+        local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        title:SetPoint("TOP", header, "TOP", 0, -14)
+        title:SetText("Blizzard Mail")
+
+        close:SetPoint("TOPRIGHT", -6, -6)
+    end
 
     -- To
     Label("To:", 24, -38)
@@ -606,17 +683,26 @@ local function BuildWindow()
     letter:SetPoint("TOPLEFT", 20, -114)
     letter:SetWidth(360)
     letter:SetHeight(110)
-    letter:SetBackdrop({
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = true, tileSize = 16, edgeSize = 16,
-        insets = { left = 4, right = 4, top = 4, bottom = 4 },
-    })
-    letter:SetBackdropColor(0, 0, 0, 0.6)
+    if D then
+        Tiled(letter, -5, D._dir .. "UI\\ui-background-marble"):SetAllPoints(letter)
+        NineSlice.ApplyLayout(letter, NineSlice.GetLayout("InsetFrameTemplate"))
+    else
+        letter:SetBackdrop({
+            bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+            edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+            tile = true, tileSize = 16, edgeSize = 16,
+            insets = { left = 4, right = 4, top = 4, bottom = 4 },
+        })
+        letter:SetBackdropColor(0, 0, 0, 0.6)
+    end
 
     local scroll = CreateFrame("ScrollFrame", "BlizzardMailLetterScroll", letter, "UIPanelScrollFrameTemplate")
     scroll:SetPoint("TOPLEFT", 8, -8)
     scroll:SetPoint("BOTTOMRIGHT", -28, 8)
+    if CP and CP.ReskinScrollBar then
+        -- DragonUI's thin bar, flush inside the letter pane.
+        pcall(CP.ReskinScrollBar, scroll, letter, 0, -4, 0, true)
+    end
 
     bodyBox = CreateFrame("EditBox", "BlizzardMailLetter", scroll)
     bodyBox:SetMultiLine(true)
