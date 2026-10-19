@@ -687,7 +687,7 @@ local function BuildWindow()
         Tiled(letter, -5, D._dir .. "UI\\ui-background-marble"):SetAllPoints(letter)
         NineSlice.ApplyLayout(letter, NineSlice.GetLayout("InsetFrameTemplate"))
     else
-        -- The stock options box (OptionsBoxTemplate) with a dark grey fill.
+        -- The stock options-box border (OptionsBoxTemplate), filled with the tooltip background in dark grey.
         letter:SetBackdrop({
             bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
             edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
