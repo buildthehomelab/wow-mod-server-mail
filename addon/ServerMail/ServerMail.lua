@@ -687,13 +687,15 @@ local function BuildWindow()
         Tiled(letter, -5, D._dir .. "UI\\ui-background-marble"):SetAllPoints(letter)
         NineSlice.ApplyLayout(letter, NineSlice.GetLayout("InsetFrameTemplate"))
     else
+        -- The stock options box (OptionsBoxTemplate) with a dark grey fill.
         letter:SetBackdrop({
             bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
             edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
             tile = true, tileSize = 16, edgeSize = 16,
-            insets = { left = 4, right = 4, top = 4, bottom = 4 },
+            insets = { left = 5, right = 5, top = 5, bottom = 5 },
         })
-        letter:SetBackdropColor(0, 0, 0, 0.6)
+        letter:SetBackdropBorderColor(0.4, 0.4, 0.4)
+        letter:SetBackdropColor(0.1, 0.1, 0.1)
     end
 
     local scroll = CreateFrame("ScrollFrame", "BlizzardMailLetterScroll", letter, "UIPanelScrollFrameTemplate")
