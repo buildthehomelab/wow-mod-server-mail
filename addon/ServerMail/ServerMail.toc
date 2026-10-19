@@ -1,7 +1,7 @@
 ## Interface: 30300
 ## Title: Blizzard Mail
 ## Notes: GM tool: mail items and gold to players from "Blizzard Services". Needs the mod-server-mail server module and a GM account. /bmail to open.
-## Version: 1.1
+## Version: 1.2
 ## OptionalDeps: DragonUI
 Presets.lua
 ServerMail.lua
