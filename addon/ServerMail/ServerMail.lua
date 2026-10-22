@@ -162,6 +162,17 @@ local function ItemLabel(id)
     return link or name or ("item " .. id)
 end
 
+-- The server splits a count into full stacks and refuses more than MAX_SLOTS stacks in one
+-- letter, so no single attachment needs more. Unknown items are clamped once the client knows
+-- them (RefreshSlots).
+local function ClampCount(id, count)
+    local stack = select(8, GetItemInfo(id))
+    if stack and stack > 0 then
+        return math.min(count, MAX_SLOTS * stack)
+    end
+    return count
+end
+
 -- Returns true once every attached item's icon is known.
 local function RefreshSlots()
     local allKnown = true
@@ -173,6 +184,7 @@ local function RefreshSlots()
                 allKnown = false
                 texture = "Interface\\Icons\\INV_Misc_QuestionMark"
             end
+            a.count = ClampCount(a.id, a.count)
             SetItemButtonTexture(button, texture)
             SetItemButtonCount(button, a.count)
         else
@@ -215,7 +227,7 @@ local function AddItem(id, count)
 
     for _, a in ipairs(attachments) do
         if a.id == id then
-            a.count = a.count + count
+            a.count = ClampCount(id, a.count + count)
             UpdateSlots()
             return
         end
@@ -226,7 +238,7 @@ local function AddItem(id, count)
         return
     end
 
-    table.insert(attachments, { id = id, count = count })
+    table.insert(attachments, { id = id, count = ClampCount(id, count) })
     RequestItem(id)
     UpdateSlots()
 end
@@ -257,7 +269,7 @@ end
 local function SetCount(index, text)
     local count = tonumber(text)
     if attachments[index] and count and count > 0 then
-        attachments[index].count = math.floor(count)
+        attachments[index].count = ClampCount(attachments[index].id, math.floor(count))
         UpdateSlots()
     end
 end
