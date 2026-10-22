@@ -269,7 +269,7 @@ namespace
             }
 
             // Check the stack count before splitting: 25:4000000000 of an item that doesn't stack
-            // would otherwise build billions of entries before the limit below is reached.
+            // would otherwise build billions of entries before the item limit was checked.
             uint32 stackSize = std::max<uint32>(1, proto->GetMaxStackSize());
             if (out.items.size() + (uint64(count) + stackSize - 1) / stackSize > MAX_MAIL_ITEMS)
             {

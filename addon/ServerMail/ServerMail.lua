@@ -162,6 +162,17 @@ local function ItemLabel(id)
     return link or name or ("item " .. id)
 end
 
+-- The server splits a count into full stacks and refuses more than MAX_SLOTS stacks in one
+-- letter, so no single attachment needs more. Unknown items are clamped once the client knows
+-- them (RefreshSlots).
+local function ClampCount(id, count)
+    local stack = select(8, GetItemInfo(id))
+    if stack and stack > 0 then
+        return math.min(count, MAX_SLOTS * stack)
+    end
+    return count
+end
+
 -- Returns true once every attached item's icon is known.
 local function RefreshSlots()
     local allKnown = true
@@ -173,6 +184,7 @@ local function RefreshSlots()
                 allKnown = false
                 texture = "Interface\\Icons\\INV_Misc_QuestionMark"
             end
+            a.count = ClampCount(a.id, a.count)
             SetItemButtonTexture(button, texture)
             SetItemButtonCount(button, a.count)
         else
@@ -204,15 +216,6 @@ local function UpdateSlots()
         poller.wait, poller.tries = 0, 0
         poller:Show()
     end
-end
-
--- The server splits a count into full stacks and refuses more than MAX_SLOTS of them.
-local function ClampCount(id, count)
-    local stack = select(8, GetItemInfo(id))
-    if stack and stack > 0 then
-        return math.min(count, MAX_SLOTS * stack)
-    end
-    return count
 end
 
 local function AddItem(id, count)
